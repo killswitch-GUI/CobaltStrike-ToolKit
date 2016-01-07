@@ -3,6 +3,11 @@ function Invoke-DACheck {
         .SYNOPSIS
         Checks to see if current user is in DA Groups and if he is returns a specfic string alerting user that they are DA for Automated purposes.
     #>
+    [CmdletBinding()]
+    param(
+        [Parameter(ValueFromPipeline=$True)]
+        [string]$Command
+    )
     process {
         $User = Get-User
         $DomainAdmins = Get-DomainAdmins
@@ -38,7 +43,7 @@ function Get-DomainAdmins {
     process 
         {
         $Ver = $PSVersionTable.PSVersion
-        If ($Ver.Major -eq 4)
+        If ($Ver.Major -gt 4)
             {
             $DAobj = Get-ADGroupMember -Identity ‘Domain Admins’
             return $DAobj.name
