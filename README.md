@@ -10,7 +10,7 @@ Load up the Script:
 aggressor> load /root/Tools/CobaltStrike-ToolKit/Initial-DACheck.cna
 [+] Load /root/Tools/CobaltStrike-ToolKit/Initial-DACheck.cna
 ```
-When a intial beacon comes in you will see:
+When a intial beacon comes in you recive a pop up box and will see:
 ```
 [*] Tasked beacon to import: /root/Tools/CobaltStrike-ToolKit/Invoke-DACheck.ps1
 [*] Tasked beacon to run: Invoke-DACheck -Initial True
@@ -18,3 +18,4 @@ When a intial beacon comes in you will see:
 [+] received output:
 Found-DA-User: admin
 ```
+
