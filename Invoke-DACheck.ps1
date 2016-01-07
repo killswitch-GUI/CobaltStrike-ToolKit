@@ -2,11 +2,15 @@ function Invoke-DACheck {
 <#
         .SYNOPSIS
         Checks to see if current user is in DA Groups and if he is returns a specfic string alerting user that they are DA for Automated purposes.
+
+        .PARAMETER Initial
+        Enables a share Anyone can Read/Write to.
     #>
-    [CmdletBinding()]
+    [cmdletbinding()]
     param(
-        [Parameter(ValueFromPipeline=$True)]
-        [string]$Command
+        [Parameter(Position=0,ValueFromPipeline=$true)]
+        [String[]]
+        $Initial
     )
     process {
         $User = Get-User
@@ -15,11 +19,16 @@ function Invoke-DACheck {
             {
             if($User -eq $DomainUser)
                 {
-                Write-Host "Found-DA-User: $User"
+                If($Initial)
+                    {
+                    Write-Host "[!] Found-DA-User: $User"
+                    }
+                Else
+                    {
+                    Write-Host "[!] Currently DA Context"
+                    }
                 }
-
-
-            }
+        }
     }
 }
 
@@ -59,7 +68,7 @@ function Get-DomainAdmins {
             $DAUsers = foreach($x in $group.GetMembers($Recurse)){$x.SamAccountName}
             return $DAUsers
             }
-    }
+        }
     }
 
 

@@ -3,13 +3,6 @@ sub powerview {
   bpowershell_import($1, script_resource("Invoke-DACheck.ps1"));
 }
 
-popup beacon {
-  # menu definitions above this point
-  insert_menu("view", $1);
-  
-  # menu definitions below this point
-}
-
 alias checkda {
   powerview($1);
   bpowershell($1, 'Invoke-DACheck');
@@ -24,15 +17,15 @@ beacon_command_register(
 # set up the Initial check
 on beacon_initial {
   powerview($1);
-  bpowershell($1, 'Invoke-DACheck');
+  bpowershell($1, 'Invoke-DACheck -Initial True');
 }
 
 # set up event consumer to search for specfic pattern
 # if found alert them via Elog and box
 on beacon_output {
     $s = replace($2, 'received output:\n'.'');
-    println($s);
-    $f = "Found-DA-User:";
+    # println($s);
+    $f = "[!] Found-DA-User:";
     if ($f isin $s)
       {
       $pid = binfo($1, "pid");
