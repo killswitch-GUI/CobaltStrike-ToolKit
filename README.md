@@ -18,7 +18,7 @@ When a intial beacon comes in you recive a pop up box and will see:
 [+] received output:
 Found-DA-User: admin
 ```
-### Indipendent Command:
+### Independent Command:
 ```
 beacon> checkda
 [*] Tasked beacon to import: /root/Tools/CobaltStrike-ToolKit/Invoke-DACheck.ps1
