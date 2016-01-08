@@ -1,6 +1,10 @@
 # CobaltStrike-ToolKit
 I’m sure there are better ways of doing all of this but as of right now there hasn’t been much put out so this will do :)
 
+## Work Conducted by:
+- Alexander Rymdeko-Harvey [Twitter] @Killswitch-GUI -- [Web] CyberSydicates.com
+- Brian R [Twitter] @brian_psu
+-
 ## CheckDA - Command
 
 Currently uses a PowerShell based check, combined with an aggressor script to check for the initial agent user name.
