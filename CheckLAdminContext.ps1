@@ -24,7 +24,15 @@ function Invoke-LocalAdminCheck {
         $SecondCheck = Get-SecondCheck
         If ($IsAdmin -or $SecondCheck)
                 {
-                Write-Host "[!] Currently-in-LocalAdmin-Context"
+                If ($Initial)
+                    {
+                    Write-Host "[!] Agent-Started-in-LocalAdmin-Context"
+                    }
+                Else
+                    {
+                     Write-Host "[!] Currently-in-LocalAdmin-Context"
+                    }
+
                 }
          Else
                 {

