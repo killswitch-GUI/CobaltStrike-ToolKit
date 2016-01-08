@@ -1,0 +1,119 @@
+# @Bretiz
+
+global('@domain_admins');
+global('$listening');
+@domain_admins = @("administrator", "jay");
+$listening = 1;
+
+sub addDA {
+  if ($1 !in @domain_admins) {
+    add(@domain_admins, $1);
+    println("Added $1 to Domain Admins");
+  }
+  else {
+    println("$1 is already in Domain Admins");
+  }
+}
+
+sub removeDA {
+  if ($1 in @domain_admins){
+    @rem = @($1);
+    @domain_admins = removeAll(@domain_admins, @rem);
+    println("Removed $1 from Domain Admins");
+    }
+  else {
+    println("$1 is not in Domain Admins");
+  }
+}
+
+sub checkDA {
+  # strip off " *" if we get a privileged beacon
+  $n = replace($user, '\Q *\E', '');
+  if ($n in @domain_admins) {
+    elog("Beacon with DA $user in PID: $pid");
+  }
+}
+
+sub parseDA {
+  $out = $1;
+  @lines = split('\n', $out);
+    foreach $line (@lines) {
+      $line = replace($line, '[\r\n]', '');
+      $line = replace($line, 'received output:', '');
+      $line = replace($line, 'Group name\p{Space}*Domain Admins', '');
+      $line = replace($line, 'The command completed successfully.', '');
+      $line = replace($line, 'Comment\p{Space}.*','');
+      $line = replace($line, 'Members.*', '');
+      $line = replace($line, '--------.*', '');
+    }
+  remove(@lines, '');
+  @lines = join('', @lines);
+  @lines = split('\s+', @lines);
+  remove(@lines, '');
+  println(@lines);
+  foreach $u (@lines) {
+      addDA($u);
+  }
+}
+
+command uaddDA {
+  addDA($1);
+}
+
+command uremDA {
+  removeDA($1);
+}
+command ulistDA {
+  printAll(@domain_admins);
+}
+
+command uhookStatus {
+  hookStatus();
+}
+
+sub hookStatus {
+  if ($listening) {
+    println("Beacon output will be parsed for Domain Admins.");
+  } else {
+    println("Beacon output will not be parsed.");
+  }
+}
+
+command uhookOn {
+  $listening = 1;
+  hookStatus();
+}
+
+command uhookOff {
+  $listening = 0;
+  hookStatus();
+}
+
+on beacon_initial {
+  $u = beacon_info($1, "user");
+  $p = beacon_info($1, "pid");
+  checkDA($user => $u, $pid => $p);
+}
+
+on credentials {
+  @creds = $1;
+  @unames = @("");
+  foreach $cred (@creds) {
+      add(@unames, $cred['user']);
+  }
+
+  foreach $da (@domain_admins) {
+    if ($da in @unames) {
+      println("Credentials store has DA $da");
+    }
+  }
+}
+
+on beacon_output {
+  if ($listening){
+    $out = $2;
+    if (('Domain Admins' isin $out) && ('The command completed successfully.' isin $out)) {
+        parseDA($out);
+    }
+  }
+}
