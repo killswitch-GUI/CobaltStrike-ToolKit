@@ -72,11 +72,13 @@ beacon> checkla
 ```
 ## DA-Watch - Set of Commands
 
-Devloped by @britz to perform the same DA monitoring but using all Aggressor script to perform DA Group checks (OPSEC). This has a few commands and requires you to update the list of DA memebers. this can be done with a few commands and is very effective way of checking for DA without loading Powershell. On Pen-test's its not a big problem but on a red team OP this may be a No-Go.
+Developed by @britz to perform the same DA monitoring but using all Aggressor script to perform DA Group checks (OPSEC). This has a few commands and requires you to update the list of DA members. this can be done with a few commands and is very effective way of checking for DA without loading PowerShell. On Pen-test's its not a big problem but on a red team OP this may be a No-Go.
 
 ### Usage
  load up the script
 ```
+aggressor> load DA-Watch.cna
+[+] Reload /root/Tools/CobaltStrike-ToolKit/DA-Watch.cna
 ```
 Run this command and it will populate the known DA list
 ```
@@ -94,7 +96,8 @@ Sets the hook to follow beacon output to "On". This will watch all output for Sh
 Turns off the watch hook and set the follow beacon output to off.
 
 ### Credential Checks
-Everytime a Cred is added to the Cred data model a credential is checked against the known list of creds. If it matches it posts to the event log!
+Every time a Cred is added to the Cred data model a credential is checked against the known list of creds. If it matches it posts to the event log! 
+
 
 
 
