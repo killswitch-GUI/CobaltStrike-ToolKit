@@ -9,6 +9,10 @@ I’m sure there are better ways of doing all of this but as of right now there 
 
 Currently uses a PowerShell based check, combined with an aggressor script to check for the initial agent user name.
 While using .NET 3.5 to perform Domain Group enumeration (PowerShell 2+ safe). This allows for alerting on Pen-Test of a DA level beacons. 
+- Places a note on the beacon
+- Logs to the Event Log for team to see PID
+- uses a Pop up to alert opperator
+
 ### Usage
 Load up the Script:
 ```
