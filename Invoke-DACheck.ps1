@@ -21,11 +21,11 @@ function Invoke-DACheck {
                 {
                 If($Initial)
                     {
-                    Write-Host "[!] Found-DA-User: $User"
+                    write-output "[!] Found-DA-User: $User"
                     }
                 Else
                     {
-                    Write-Host "[!] Currently DA Context"
+                    write-output "[!] Currently DA Context"
                     }
                 }
         }
