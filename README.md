@@ -36,6 +36,7 @@ beacon> checkda
 
 Currently uses a PowerShell based check, combined with an aggressor script to check for the initial agent context.
 While using .NET 3.5 to perform Local Group enumeration and Token Context (PowerShell 2+ safe). This has the following context:
+
 1. Checks for Initial Beacons Context (Elevated or Local Admin)
 2. If the beacon is elevated it will Auto Getsystem, and run LogonPasswords
 3. If the beacon in Local Admin but not in a high integrity process it will run Bypass UAC on that beacon
