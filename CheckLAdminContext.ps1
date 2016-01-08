@@ -26,17 +26,17 @@ function Invoke-LocalAdminCheck {
                 {
                 If ($Initial)
                     {
-                    Write-Host "[!] Agent-Started-in-LocalAdmin-Context"
+                    write-output "[!] Agent-Started-in-LocalAdmin-Context"
                     }
                 Else
                     {
-                     Write-Host "[!] Currently-in-LocalAdmin-Context"
+                     write-output "[!] Currently-in-LocalAdmin-Context"
                     }
 
                 }
          Else
                 {
-                Write-Host "[!] Current-User-Not-LocalAdmin-Context"
+                write-output "[!] Current-User-Not-LocalAdmin-Context"
                 }
     }
 }
@@ -69,7 +69,7 @@ function Get-SecondCheck {
             }
         }
         Catch {
-            Write-Host  "Script Check Failed"
+            write-output  "Script Check Failed"
         }
     }
 
