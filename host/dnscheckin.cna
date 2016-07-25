@@ -1,0 +1,6 @@
+on beacon_initial_empty {
+	bmode($1, "dns-txt");	
+	bcheckin($1);
+	bnote($1, "-needs to be evaluated!");
+	bsleep($1, 120, 20)
+}
