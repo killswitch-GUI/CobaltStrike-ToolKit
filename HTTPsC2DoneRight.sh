@@ -83,6 +83,15 @@ func_apache_check(){
   #   echo '          80 not be in use.'
   #   echo
   #   exit 1
+  if [ $(which java) ]; then
+    echo '[Sweet] java is already installed'
+    echo
+  else
+    apt-get update
+    apt-get install default-jre -y 
+    echo '[Success] java is now installed'
+    echo
+  fi
   if [ $(which apache2) ]; then
     echo '[Sweet] Apache2 is already installed'
     service apache2 start
