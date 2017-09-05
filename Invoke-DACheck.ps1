@@ -13,25 +13,14 @@ function Invoke-DACheck {
         $Initial
     )
     process {
-        $User = Get-User
+        # Returns list of process owners
+        $Users = Get-User
+        # Returns list of domain admins
         $DomainAdmins = Get-DomainAdmins
-        foreach($DomainUser in $DomainAdmins) 
-            {
-            if($User -eq $DomainUser)
-                {
-                If($Initial)
-                    {
-                    write-output "[!] Found-DA-User: $User"
-                    }
-                Else
-                    {
-                    write-output "[!] Currently DA Context"
-                    }
-                }
-        }
-    }
+        # Loops through the process owners and members of Domain admins to see if there is a match
+        $Found = ForEach ($User in $Users) {if ($DomainAdmins -contains $User) {Write-Host "[!] Found-DA-User: $User" -ForegroundColor "red"}} 
+           }
 }
-
 
 function Get-DomainAdmins { 
 <#
@@ -78,9 +67,15 @@ function Get-User {
         Montiotrs the current DA accounts and alerts the desired admin if a change where to take place whithin the group.
     #>
     process {
-        $User = [Security.Principal.WindowsIdentity]::GetCurrent().Name
-        $User = $User.trimstart([Environment]::UserDomainName)
-        $User = $User.trimstart("\")
-        return $User
+        # This retrieves all running processes that are not running as local system and such
+		$ProcessOwner = @{}
+		Get-WmiObject win32_process | ForEach-Object {$ProcessOwner[$_.handle] = $_.getowner().user}
+		$ProcessOwnerList = Get-Process | Select-Object Id,@{l="Owner";e={$ProcessOwner[$_.id.ToString()]}} | Where-Object {!($ProcessOwner[$_.id.ToString()] -match "(?:SYSTEM|(?:LOCAL|NETWORK) SERVICE)")}
+        return $ProcessOwnerList.Owner        
+
+        # $User = [Security.Principal.WindowsIdentity]::GetCurrent().Name
+        # $User = $User.trimstart([Environment]::UserDomainName)
+        # $User = $User.trimstart("\")
+        # return $User
     }
 }
