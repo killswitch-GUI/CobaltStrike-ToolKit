@@ -17,7 +17,7 @@ function Invoke-DACheck {
         $Users = Get-User
         # Returns list of domain admins
         $DomainAdmins = Get-DomainAdmins
-        # Dont know how to loop through each variable
+        # Loops through the process owners and members of Domain admins to see if there is a match
         $Found = ForEach ($User in $Users) {if ($DomainAdmins -contains $User) {Write-Host "[!] Found-DA-User: $User" -ForegroundColor "red"}} 
            }
 }
