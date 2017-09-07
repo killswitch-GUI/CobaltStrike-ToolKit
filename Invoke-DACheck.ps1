@@ -51,23 +51,9 @@ function Get-DomainAdmins {
     )
     process 
         {
-        $Ver = $PSVersionTable.PSVersion
-        If ($Ver.Major -gt 4)
-            {
-            $DAobj = Get-ADGroupMember -Identity ‘Domain Admins’
-            return $DAobj.name
-            }
-
-        Else
-            {
-            $Recurse = $true
-            Add-Type -AssemblyName System.DirectoryServices.AccountManagement
-            $ct = [System.DirectoryServices.AccountManagement.ContextType]::Domain
-            $group=[System.DirectoryServices.AccountManagement.GroupPrincipal]::FindByIdentity($ct,'Domain Admins')
-            $Obj = $group.GetMembers($Recurse) | select SamAccountName
-            $DAUsers = foreach($x in $group.GetMembers($Recurse)){$x.SamAccountName}
-            return $DAUsers
-            }
+        $groupname = 'Domain Admins'
+        $DAUsers = (New-Object System.DirectoryServices.DirectoryEntry((New-Object System.DirectoryServices.DirectorySearcher("(&(objectCategory=Group)(name=$($groupname)))")).FindOne().GetDirectoryEntry().Path)).member | % { (New-Object System.DirectoryServices.DirectoryEntry("LDAP://"+$_)) } | foreach {$_.sAMAccountName}
+        return $DAUsers   
         }
     }
 
