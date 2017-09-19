@@ -13,25 +13,28 @@ function Invoke-DACheck {
         $Initial
     )
     process {
+        # Returns list of process owners
         $User = Get-User
+        # Returns list of domain admins
         $DomainAdmins = Get-DomainAdmins
-        foreach($DomainUser in $DomainAdmins) 
+        # Loop through Process Owners
+        ForEach ($DomainUser in $DomainAdmins) 
             {
-            if($User -eq $DomainUser)
+            if($User -match $DomainUser)
                 {
-                If($Initial)
+                if($Initial)
                     {
-                    write-output "[!] Found-DA-User: $User"
+                    Write-Output "[!] Found-DA-User: $DomainUser"
                     }
-                Else
+                else
                     {
-                    write-output "[!] Currently DA Context"
+                    Write-Output "[!] Found-DA-User: $DomainUser"
                     }
                 }
+        
         }
     }
 }
-
 
 function Get-DomainAdmins { 
 <#
@@ -64,9 +67,13 @@ function Get-User {
         Montiotrs the current DA accounts and alerts the desired admin if a change where to take place whithin the group.
     #>
     process {
-        $User = [Security.Principal.WindowsIdentity]::GetCurrent().Name
-        $User = $User.trimstart([Environment]::UserDomainName)
-        $User = $User.trimstart("\")
-        return $User
+        # This retrieves all running processes that are not running as local system and such
+        $ProcessOwner = @{}
+        Get-WmiObject win32_process | ForEach-Object {$ProcessOwner[$_.handle] = $_.getowner().user}
+        $ProcessOwnerList = Get-Process | Select-Object Id, @{l="Owner";e={$ProcessOwner[$_.id.ToString()]}} | Where-Object {!($ProcessOwner[$_.id.ToString()] -match "(?:SYSTEM|(?:LOCAL|NETWORK) SERVICE)")}
+        $Output = $ProcessOwnerList | Select-Object Owner -Unique
+        return $Output
+        
+        
     }
 }
