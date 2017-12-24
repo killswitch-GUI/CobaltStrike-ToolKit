@@ -1,4 +1,5 @@
 # BUILD INSTRUCTIONS & README
+# POST HERE: https://blog.obscuritylabs.com/docker-command-controll-c2/
 #   1) docker build --build-arg cskey="xxxx-xxxx-xxxx-xxxx" -t cobaltstrike\cs .
 #   2) docker run -d -p 192.168.2.238:50050:50050 cobaltstrike/cs 192.168.2.238 password
 #      - This runs docker in Detached mode, to tshoot issues or see logs do the following
