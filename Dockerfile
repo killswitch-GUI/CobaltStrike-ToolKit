@@ -33,7 +33,7 @@ RUN apt-get update && \
 
 # install oracle jave
 RUN cd /opt && \
-    wget -c --header 'Cookie: oraclelicense=accept-securebackup-cookie' http://download.oracle.com/otn-pub/java/jdk/9.0.1+11/jdk-9.0.1_linux-x64_bin.tar.gz && \
+    wget -c --header 'Cookie: oraclelicense=accept-securebackup-cookie' http://download.oracle.com/otn-pub/java/jdk/9.0.4+11/c2514751926b4512b076cc82f959763f/jdk-9.0.4_linux-x64_bin.tar.gz && \
     tar xvf jdk-9.0.1_linux-x64_bin.tar.gz && \
     cd jdk-9.0.1 && \
     source /etc/bash.bashrc && \
