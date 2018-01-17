@@ -37,10 +37,10 @@ RUN cd /opt && \
     tar xvf jdk-9.0.4_linux-x64_bin.tar.gz && \
     cd jdk-9.0.4 && \
     source /etc/bash.bashrc && \
-    sudo update-alternatives --install '/usr/bin/java' 'java' '/opt/jdk-9.0.1/bin/java' 1 && \
-    sudo update-alternatives --install '/usr/bin/javac' 'javac' '/opt/jdk-9.0.1/bin/javac' 1 && \
-    sudo update-alternatives --set 'java' '/opt/jdk-9.0.1/bin/java' && \
-    sudo update-alternatives --set 'javac' '/opt/jdk-9.0.1/bin/javac'
+    sudo update-alternatives --install '/usr/bin/java' 'java' '/opt/jdk-9.0.4/bin/java' 1 && \
+    sudo update-alternatives --install '/usr/bin/javac' 'javac' '/opt/jdk-9.0.4/bin/javac' 1 && \
+    sudo update-alternatives --set 'java' '/opt/jdk-9.0.4/bin/java' && \
+    sudo update-alternatives --set 'javac' '/opt/jdk-9.0.4/bin/javac'
 
 # install CobaltStrike with license key and update
 RUN var=$(curl 'https://www.cobaltstrike.com/download' -XPOST -H 'Referer: https://www.cobaltstrike.com/download' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Origin: https://www.cobaltstrike.com' -H 'Host: www.cobaltstrike.com' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -H 'Accept-Language: en-us' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/604.3.5 (KHTML, like Gecko) Version/11.0.1 Safari/604.3.5' --data "dlkey=$cs_key" | sed -n 's/.*href="\([^"]*\).*/\1/p' | grep /downloads/ | cut -d '.' -f 1) && \
