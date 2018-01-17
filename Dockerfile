@@ -21,7 +21,7 @@ LABEL description="Dockerfile base for CobaltStrike."
 # setup local env
 ARG cskey
 ENV cs_key ${cskey}
-ENV JAVA_HOME /opt/jdk-9.0.1
+ENV JAVA_HOME /opt/jdk-9.0.4
 ENV PATH $PATH:$JAVA_HOME/bin
 
 # docker hardcoded sh...
