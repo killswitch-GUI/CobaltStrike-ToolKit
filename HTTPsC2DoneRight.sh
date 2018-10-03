@@ -160,6 +160,11 @@ func_build_c2(){
   echo   set keystore \"$domainStore\"\; >> amazon.profile
   echo   set password \"$password\"\; >> amazon.profile
   echo '}' >> amazon.profile
+  echo 'code-signer {' >> amazon.profile
+  echo   set keystore \"$domainStore\"\; >> amazon.profile
+  echo   set password \"$password\"\; >> amazon.profile
+  echo   set alias \"$domain\"\; >> amazon.profile
+  echo '}' >> amazon.profile
   echo '[Success] amazon.profile updated with HTTPs settings.'
 }
 # Menu Case Statement
