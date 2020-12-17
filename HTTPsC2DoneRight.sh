@@ -14,10 +14,11 @@ echo '==========================================================================
 echo ' HTTPS C2 Done Right Setup Script | [Updated]: 2016'
 echo '=========================================================================='
 echo ' [Web]: Http://CyberSyndicates.com | [Twitter]: @KillSwitch-GUI'
+echo ' Updated by ad0nis, December 2020'
 echo '=========================================================================='
 
 
-echo -n "Enter your DNS (A) record for domain [ENTER]: "
+echo -n "Enter your DNS (A) record (FQDN) for domain [ENTER]: "
 read domain
 echo
 
@@ -122,12 +123,13 @@ func_apache_check(){
 }
 
 func_install_letsencrypt(){
-  echo '[Starting] cloning into letsencrypt!'
-  git clone https://github.com/certbot/certbot /opt/letsencrypt
+  echo '[Starting] snap install certbot'
+  snap install --classic certbot
+  echo '[Starting] link certbot'
+  sudo ln -s /snap/bin/certbot /usr/bin/certbot
   echo '[Success] letsencrypt is built!'
-  cd /opt/letsencrypt
   echo '[Starting] to build letsencrypt cert!'
-  ./letsencrypt-auto --apache -d $domain -n --register-unsafely-without-email --agree-tos 
+  certbot --apache -d $domain -n --register-unsafely-without-email --agree-tos 
   if [ -e /etc/letsencrypt/live/$domain/fullchain.pem ]; then
     echo '[Success] letsencrypt certs are built!'
   else
@@ -135,6 +137,7 @@ func_install_letsencrypt(){
     exit 1
   fi
 }
+
 
 func_build_pkcs(){
   cd /etc/letsencrypt/live/$domain
@@ -153,7 +156,7 @@ func_build_c2(){
   cd $cobaltStrikeProfilePath
   echo '[Starting] Cloning into amazon.profile for testing.'
   wget https://raw.githubusercontent.com/rsmudge/Malleable-C2-Profiles/master/normal/amazon.profile --no-check-certificate -O amazon.profile
-  echo '[Success] amazon.profile clonned.'
+  echo '[Success] amazon.profile cloned.'
   echo '[Starting] Adding java keystore / password to amazon.profile.'
   echo " " >> amazon.profile
   echo 'https-certificate {' >> amazon.profile
